@@ -1,0 +1,18 @@
+{
+  "title": "FELADATLISTA",
+  "Button": {
+    "add": "Hozzáad",
+    "update": "Módosítás",
+    "edit": "Módosítás",
+    "delete": "Törlés",
+    "save": "Mentés"
+  },
+  "search": "Feladat keresése",
+  "Toast": {
+    "done": "Feladat Kész <3",
+    "notDone": "Feladat nincs kész:(",
+    "delete": "Sikeres törlés",
+    "update": "Sikeres frissítés",
+    "add": "Sikeresen hozzáadtad a feladatot a listádhoz"
+  }
+}

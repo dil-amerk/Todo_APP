@@ -1,0 +1,18 @@
+{
+  "title": "TODO LIST",
+  "Button": {
+    "add": "Add",
+    "update": "Update",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save"
+  },
+  "search": "Search todos",
+  "Toast": {
+    "done": "Todo Done <3",
+    "notDone": "Todo Not Done :(",
+    "delete": "Deleted successfully",
+    "update": "Update successfully",
+    "add": "Added successfully"
+  }
+}
