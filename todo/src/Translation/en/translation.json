@@ -1,11 +1,12 @@
 {
   "title": "TODO LIST",
+  "label": "Add Todo",
   "Button": {
     "add": "Add",
-    "update": "Update",
     "edit": "Edit",
     "delete": "Delete",
-    "save": "Save"
+    "save": "Save",
+    "cancel": "Cancel"
   },
   "search": "Search todos",
   "Toast": {
@@ -14,5 +15,6 @@
     "delete": "Deleted successfully",
     "update": "Update successfully",
     "add": "Added successfully"
-  }
+  },
+  "noItem": "Please add todo to the list!!"
 }

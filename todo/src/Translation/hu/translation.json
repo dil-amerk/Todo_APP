@@ -1,11 +1,12 @@
 {
   "title": "FELADATLISTA",
+  "label": "Mik a teendőid ?",
   "Button": {
     "add": "Hozzáad",
-    "update": "Módosítás",
     "edit": "Módosítás",
     "delete": "Törlés",
-    "save": "Mentés"
+    "save": "Mentés",
+    "cancel": "Kilépés"
   },
   "search": "Feladat keresése",
   "Toast": {
@@ -14,5 +15,6 @@
     "delete": "Sikeres törlés",
     "update": "Sikeres frissítés",
     "add": "Sikeresen hozzáadtad a feladatot a listádhoz"
-  }
+  },
+  "noItem": "Kérlek addj valamilyen feladatot a listádhoz!!"
 }
