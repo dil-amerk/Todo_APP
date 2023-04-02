@@ -1,160 +1,154 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  loadTodos,
-  selectTodos,
-  updateTodo,
-  deleteTodo,
-} from "../store/todoSlice";
-import i18next from "i18next";
+import React, { useReducer, useState } from "react";
+import todoReducer from "../store/todoSlice";
 import { ITodo } from "../redux/types";
-import { useTranslation } from "react-i18next";
+import MuiAlert from "@mui/material/Alert";
 import {
-  Input,
-  Checkbox,
-  Button,
-  Snackbar,
   Card,
-  CardActions,
   CardContent,
-  Grid,
   TextField,
-  Typography,
+  Button,
+  Checkbox,
+  Grid,
+  CardActions,
+  FormControlLabel,
+  Snackbar,
 } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const TodoList = () => {
-  const dispatch = useDispatch();
+  const [state, dispatch] = useReducer(todoReducer, {
+    todos: JSON.parse(localStorage.getItem("todos")!) || [],
+  });
 
-  const allTodos: ITodo[] = useSelector(selectTodos);
-  const [editTodo, setEditTodo] = useState<{
-    id: number;
-    todo: string;
-  } | null>(null);
-
-  const [checkedTodos, setCheckedTodos] = useState<number[]>([]);
-  const [searchInput, setSearchInput] = useState("");
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
-
-  const { t } = useTranslation();
-
-  useEffect(() => {
-    dispatch(loadTodos());
-  }, [dispatch]);
-
-  const showToast = (message: string) => {
-    setToastMessage(message);
-  };
-
-  const handleEditClick = (todo: ITodo) => {
-    setEditTodo({ id: todo.id, todo: todo.todo });
-  };
-
-  const handleEditChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEditTodo({
-      ...editTodo!,
-      todo: e.target.value,
-    });
-  };
-
-  const handleEditSave = () => {
-    if (editTodo) {
-      dispatch(
-        updateTodo({
-          ...editTodo,
-          done: allTodos.find((todo) => todo.id === editTodo.id)?.done || false,
-        })
-      );
-      setEditTodo(null);
+  const [editTodo, setEditTodo] = useState<{ id: string | null; todo: string }>(
+    {
+      id: null,
+      todo: "",
     }
-    showToast(`${t("Toast.update")}`);
-  };
-
-  const handleCheckboxChange = (todoId: number) => {
-    if (checkedTodos.includes(todoId)) {
-      setCheckedTodos(checkedTodos.filter((id) => id !== todoId));
-      dispatch(
-        updateTodo({
-          id: todoId,
-          done: false,
-          todo: allTodos.find((todo) => todo.id === todoId)!.todo,
-        })
-      );
-      showToast(`${t("Toast.notDone")}`);
-    } else {
-      setCheckedTodos([...checkedTodos, todoId]);
-      dispatch(
-        updateTodo({
-          id: todoId,
-          done: true,
-          todo: allTodos.find((todo) => todo.id === todoId)!.todo,
-        })
-      );
-      showToast(`${t("Toast.done")}`);
-    }
-  };
-
-  const handleDeleteClick = (todoId: number) => {
-    dispatch(deleteTodo(todoId));
-    showToast(`${t("Toast.delete")}`);
-  };
-
-  const filteredTodos = allTodos.filter(
-    (todo) =>
-      typeof todo.todo === "string" &&
-      todo.todo.toLowerCase().includes(searchInput.toLowerCase())
   );
+
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState("");
+
+  const handleToggleTodo = (id: string) => {
+    dispatch({ type: "TOGGLE_TODO", payload: id });
+    const todo = state.todos.find((todo) => todo.id === id);
+    const message = todo?.done
+      ? `Checked "${todo.todo}" off the list`
+      : `Unchecked "${todo.todo}" from the list`;
+    setNotificationMessage(message);
+    setShowNotification(true);
+  };
+
+  const handleDeleteTodo = (id: string) => {
+    const todo = state.todos.find((todo) => todo.id === id);
+    dispatch({ type: "DELETE_TODO", payload: id });
+    setNotificationMessage(`Deleted "${todo?.todo}" from the list`);
+    setShowNotification(true);
+  };
+
+  const handleEditTodo = () => {
+    dispatch({
+      type: "EDIT_TODO",
+      payload: { id: editTodo.id, todo: editTodo.todo },
+    });
+    setEditTodo({ id: null, todo: "" });
+  };
+
+  const handleStartEditTodo = (id: string, todo: string) => {
+    setEditTodo({ id, todo: todo });
+  };
+
+  const handleCancelEditTodo = () => {
+    setEditTodo({ id: null, todo: "" });
+  };
+
+  const handleChangeEditingText = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEditTodo({ ...editTodo, todo: e.target.value });
+  };
+
+  const handleCloseNotification = () => {
+    setShowNotification(false);
+  };
 
   return (
     <div>
-      <Input
-        placeholder={i18next.t("search")}
-        value={searchInput}
-        onChange={(e) => setSearchInput(e.target.value)}
-        margin="normal"
-      />
       <Grid container spacing={2}>
-        {filteredTodos.map((todo) => (
-          <Grid item xs={12} sm={6} md={4} key={todo.id}>
-            <Card sx={{ boxShadow: "0 4px 10px rgba(0, 0, 0, 0.4)" }}>
+        {state.todos.map((todo: ITodo) => (
+          <Grid item xs={6} md={4} lg={3} key={todo.id}>
+            <Card sx={{ marginBottom: "10px" }}>
               <CardContent>
-                <Checkbox
-                  checked={checkedTodos.includes(todo.id)}
-                  onChange={() => handleCheckboxChange(todo.id)}
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={todo.done}
+                      onChange={() => handleToggleTodo(todo.id)}
+                    />
+                  }
+                  label={
+                    editTodo.id === todo.id ? (
+                      <TextField
+                        value={editTodo.todo}
+                        onChange={handleChangeEditingText}
+                        fullWidth
+                      />
+                    ) : (
+                      <span>{todo.todo}</span>
+                    )
+                  }
                 />
-                {editTodo?.id === todo.id ? (
-                  <TextField
-                    value={editTodo.todo}
-                    onChange={handleEditChange}
-                    fullWidth
-                  />
-                ) : (
-                  <Typography>{todo.todo}</Typography>
-                )}
               </CardContent>
               <CardActions>
-                <Button size="small" onClick={() => handleDeleteClick(todo.id)}>
-                  {i18next.t("Button.delete")}
-                </Button>
-                <Button size="small" onClick={() => handleEditClick(todo)}>
-                  {i18next.t("Button.edit")}
-                </Button>
-                {editTodo?.id === todo.id && (
-                  <Button size="small" onClick={handleEditSave}>
-                    {i18next.t("Button.save")}
+                {editTodo.id === todo.id ? (
+                  <>
+                    <Button
+                      variant="contained"
+                      onClick={handleEditTodo}
+                      sx={{ marginRight: "10px" }}
+                    >
+                      Save
+                    </Button>
+                    <Button variant="outlined" onClick={handleCancelEditTodo}>
+                      Cancel
+                    </Button>
+                  </>
+                ) : (
+                  <Button
+                    variant="contained"
+                    startIcon={<EditIcon />}
+                    onClick={() => handleStartEditTodo(todo.id, todo.todo)}
+                    sx={{ marginRight: "10px" }}
+                  >
+                    Edit
                   </Button>
                 )}
+                <Button
+                  variant="contained"
+                  color="error"
+                  startIcon={<DeleteIcon />}
+                  onClick={() => handleDeleteTodo(todo.id)}
+                >
+                  Delete
+                </Button>
               </CardActions>
             </Card>
           </Grid>
         ))}
       </Grid>
-
       <Snackbar
-        open={!!toastMessage}
-        autoHideDuration={3000}
-        onClose={() => setToastMessage(null)}
-        message={toastMessage || ""}
-      />
+        open={showNotification}
+        autoHideDuration={4000}
+        onClose={handleCloseNotification}
+      >
+        <MuiAlert
+          onClose={handleCloseNotification}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          {notificationMessage}
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 };

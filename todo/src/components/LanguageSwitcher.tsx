@@ -3,9 +3,6 @@ import { Select, MenuItem, useMediaQuery, useTheme } from "@mui/material";
 
 const LanguageSwitcher = () => {
   const { i18n } = useTranslation();
-  const theme = useTheme();
-
-  const Mobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const onClickLanguageChange = (e: any) => {
     const language = e.target.value;
@@ -16,8 +13,8 @@ const LanguageSwitcher = () => {
     <div
       style={{
         position: "absolute",
-        top: "50px",
-        left: 0,
+        top: 0,
+        left: "260px",
         display: "flex",
         zIndex: 1000,
       }}
@@ -26,7 +23,6 @@ const LanguageSwitcher = () => {
         label="Language"
         defaultValue="en"
         onChange={onClickLanguageChange}
-        sx={{ mr: Mobile ? 1 : 0 }}
       >
         <MenuItem value="en">English</MenuItem>
         <MenuItem value="hu">Magyar</MenuItem>
