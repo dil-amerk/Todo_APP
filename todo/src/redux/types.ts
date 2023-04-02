@@ -1,5 +1,5 @@
 export interface ITodo {
-  id: number;
+  id: string;
   todo: string;
   done: boolean;
 }
@@ -7,3 +7,9 @@ export interface ITodo {
 export interface TodoState {
   todos: ITodo[];
 }
+
+export type TodoAction =
+  | { type: "ADD_TODO"; payload: string }
+  | { type: "TOGGLE_TODO"; payload: string }
+  | { type: "DELETE_TODO"; payload: string }
+  | { type: "EDIT_TODO"; payload: { id: string; todo: string } };
