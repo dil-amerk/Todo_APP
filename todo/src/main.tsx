@@ -4,24 +4,40 @@ import { Provider } from "react-redux";
 import App from "./App";
 import { store } from "./store/store";
 import "./Translation/config";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import TodoList from "./pages/TodoList";
+import {
+  createBrowserRouter,
+  redirect,
+  RouterProvider,
+} from "react-router-dom";
+
+import { QueryClient, QueryClientProvider } from "react-query";
+import { UpdateTodo } from "./pages/UpdateTodo";
+import { List } from "../src/pages/List";
+
+const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/old",
     element: <App />,
   },
+
   {
-    path: "/list",
-    element: <TodoList />,
+    path: "/update/:id",
+    element: <UpdateTodo />,
+  },
+  {
+    path: "/",
+    element: <List />,
   },
 ]);
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <RouterProvider router={router} />
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
     </Provider>
   </React.StrictMode>,
   document.getElementById("root")
