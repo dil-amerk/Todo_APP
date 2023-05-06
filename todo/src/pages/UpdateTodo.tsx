@@ -1,23 +1,47 @@
-import React from "react";
+import { useState } from "react";
+import { useMutation } from "react-query";
 import { useParams } from "react-router-dom";
-import { useUpdateTodo } from "../hooks/useUpdateTodo";
+import { updateTodoItem } from "../hooks";
 
-export const UpdateTodo = () => {
-  const { id } = useParams();
+interface TodoItem {
+  id: string;
+  content: string;
+}
 
-  const { data, isLoading, isError, error } = useUpdateTodo(id);
+interface UpdateTodoItemInput {
+  id: string;
+  content?: string;
+}
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+export function UpdateTodo() {
+  const { id } = useParams<{ id: string }>();
+  const [content, setContent] = useState("");
 
-  if (isError) {
-    return <div>Error: {error.message}</div>;
-  }
+  const updateMutation = useMutation(
+    (updates: UpdateTodoItemInput) => updateTodoItem(updates),
+    {
+      onSuccess: () => {
+        console.log("Item updated successfully");
+      },
+    }
+  );
+
+  const handleUpdate = () => {
+    updateMutation.mutate({
+      id,
+      content,
+    });
+  };
 
   return (
     <div>
-      {data?.content} - {data?.created_at}
+      <input
+        type="text"
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
+      />
+
+      <button onClick={handleUpdate}>Update</button>
     </div>
   );
-};
+}

@@ -6,7 +6,6 @@ import { store } from "./store/store";
 import "./Translation/config";
 import {
   createBrowserRouter,
-  redirect,
   RouterProvider,
 } from "react-router-dom";
 
@@ -29,6 +28,10 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <List />,
+  },
+  {
+    path: "/login",
+    element: <h1>LOGIN</h1>,
   },
 ]);
 

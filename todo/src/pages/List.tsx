@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { useTodo } from "../hooks/useTodo";
+import { useTodo } from "../hooks";
+import { AddTodo } from "./AddTodo";
 
 export const List = () => {
   const { data, isLoading, error, isError } = useTodo();
@@ -13,14 +14,17 @@ export const List = () => {
   }
 
   return (
-    <ul>
-      {data.map((task: any) => {
-        return (
-          <div key={task.id}>
-            <Link to={`/update/${task.id}`}>{task.content}</Link>
-          </div>
-        );
-      })}
-    </ul>
+    <div>
+      <AddTodo />
+      <ul>
+        {data.map((task: any) => {
+          return (
+            <div key={task.id}>
+              <Link to={`/update/${task.id}`}>{task.content}</Link>
+            </div>
+          );
+        })}
+      </ul>
+    </div>
   );
 };
