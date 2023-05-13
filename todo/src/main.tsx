@@ -4,14 +4,13 @@ import { Provider } from "react-redux";
 import App from "./App";
 import { store } from "./store/store";
 import "./Translation/config";
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import { QueryClient, QueryClientProvider } from "react-query";
 import { UpdateTodo } from "./pages/UpdateTodo";
-import { List } from "../src/pages/List";
+import { Main } from "./pages/Main";
+import Login from "./pages/Login";
+import { DragAndDropTable } from "./components/DragAndDropTable";
 
 const queryClient = new QueryClient();
 
@@ -26,12 +25,17 @@ const router = createBrowserRouter([
     element: <UpdateTodo />,
   },
   {
-    path: "/",
-    element: <List />,
+    path: "/a",
+    element: <DragAndDropTable />,
   },
   {
+    path: "/",
+    element: <Main />,
+  },
+
+  {
     path: "/login",
-    element: <h1>LOGIN</h1>,
+    element: <Login />,
   },
 ]);
 
