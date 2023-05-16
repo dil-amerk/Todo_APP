@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useTodo } from "../hooks";
 import { AddTodo } from "./AddTodo";
+import { Grid, Card, CardContent, Typography } from "@mui/material";
 
 export const List = () => {
   const { data, isLoading, error, isError } = useTodo();
@@ -14,17 +15,34 @@ export const List = () => {
   }
 
   return (
-    <div>
-      <AddTodo />
-      <ul>
-        {data.map((task: any) => {
-          return (
-            <div key={task.id}>
-              <Link to={`/update/${task.id}`}>{task.content}</Link>
-            </div>
-          );
-        })}
-      </ul>
-    </div>
+    <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <AddTodo />
+      </Grid>
+      {data.map((task: any) => {
+        return (
+          <Grid item xs={12} sm={6} md={4} key={task.id}>
+            <Card
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <CardContent>
+                <Typography variant="h6" sx={{ color: "black" }}>
+                  <Link
+                    to={`/update/${task.id}`}
+                    style={{ textDecoration: "none", color: "black" }}
+                  >
+                    {task.content}
+                  </Link>
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+        );
+      })}
+    </Grid>
   );
 };

@@ -1,12 +1,9 @@
 import { useState } from "react";
 import { useMutation } from "react-query";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { updateTodoItem } from "../hooks";
-
-interface TodoItem {
-  id: string;
-  content: string;
-}
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
 
 interface UpdateTodoItemInput {
   id: string;
@@ -15,6 +12,7 @@ interface UpdateTodoItemInput {
 
 export function UpdateTodo() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [content, setContent] = useState("");
 
   const updateMutation = useMutation(
@@ -22,6 +20,7 @@ export function UpdateTodo() {
     {
       onSuccess: () => {
         console.log("Item updated successfully");
+        navigate("/");
       },
     }
   );
@@ -35,13 +34,15 @@ export function UpdateTodo() {
 
   return (
     <div>
-      <input
-        type="text"
+      <TextField
+        label="Content"
         value={content}
         onChange={(e) => setContent(e.target.value)}
       />
 
-      <button onClick={handleUpdate}>Update</button>
+      <Button onClick={handleUpdate} variant="contained">
+        Update
+      </Button>
     </div>
   );
 }

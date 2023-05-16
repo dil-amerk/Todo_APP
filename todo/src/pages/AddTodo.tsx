@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAddTodo } from "../hooks";
+import { TextField, Button, Alert } from "@mui/material";
 
 export const AddTodo = () => {
   const [taskName, setTaskName] = useState("");
@@ -12,19 +13,20 @@ export const AddTodo = () => {
     };
     const taskId = await postTodo(task);
     console.log(`Task posted to API with ID ${taskId}`);
+    setTaskName("");
   };
 
   return (
     <form onSubmit={handleFormSubmit}>
-      <input
-        type="text"
+      <TextField
+        label="Task Name"
         value={taskName}
         onChange={(event) => setTaskName(event.target.value)}
       />
-      <button type="submit" disabled={isLoading}>
+      <Button type="submit" variant="contained" disabled={isLoading}>
         {isLoading ? "Loading..." : "Add Task"}
-      </button>
-      {error && <p>{error.message}</p>}
+      </Button>
+      {error && <Alert severity="error">{error.message}</Alert>}
     </form>
   );
 };
