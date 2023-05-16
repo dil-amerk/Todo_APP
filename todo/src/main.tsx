@@ -7,10 +7,10 @@ import "./Translation/config";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import { QueryClient, QueryClientProvider } from "react-query";
-import { UpdateTodo } from "./pages/UpdateTodo";
-import { Main } from "./pages/Main";
-import Login from "./pages/Login";
 import { DragAndDropTable } from "./components/DragAndDropTable";
+
+import { List } from "./pages/List";
+import { SidePanel } from "./pages/SidePanel";
 
 const queryClient = new QueryClient();
 
@@ -22,7 +22,7 @@ const router = createBrowserRouter([
 
   {
     path: "/update/:id",
-    element: <UpdateTodo />,
+    element: <SidePanel />,
   },
   {
     path: "/a",
@@ -30,12 +30,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
-    element: <Main />,
-  },
-
-  {
-    path: "/login",
-    element: <Login />,
+    element: <List />,
   },
 ]);
 

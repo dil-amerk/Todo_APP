@@ -78,3 +78,11 @@ export async function updateTodoItem(
 }
 
 // ## DELET TODO ##
+
+export async function deleteTodoItem(id: string): Promise<void> {
+  await axios.delete(`${API_URL}/${id}`, {
+    headers: {
+      Authorization: `Bearer ${API_KEY}`,
+    },
+  });
+}
